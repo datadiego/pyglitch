@@ -1,11 +1,11 @@
 import PIL.Image
 from PIL import Image
-image_path = "./catparty.jpeg"
+image_path = "./gatocrimen.jpeg"
 
 def dither(image_path, colors=8, resizeFactor=2):
     # Abre la imagen
     image = PIL.Image.open(image_path)
-    image = resize(image, resizeFactor)
+    image = image.resize((image.width/resizeFactor, image.height/resizeFactor), Image.NEAREST)
     image = image.convert("P").quantize(colors=colors, method=Image.Quantize.MEDIANCUT, dither=Image.FLOYDSTEINBERG)
     image = add_saturation(image, 160)
     image = image.resize((image.width*resizeFactor, image.height*resizeFactor), Image.NEAREST)
@@ -28,4 +28,4 @@ def add_saturation(image, saturation):
     image = image.convert("RGB")
     return image
 
-dither(image_path, colors=7, resizeFactor=2)
+dither(image_path, colors=64, resizeFactor=4)
