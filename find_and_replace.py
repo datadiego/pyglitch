@@ -1,20 +1,7 @@
 import sys
-import PIL.Image
-
-def find_and_replace(image_path, output_path, find, replace):
-    # Abre la imagen
-    image = PIL.Image.open(image_path)
-    image = image.convert('RGB')
-    # Saca los bytes de la imagen, esto elimina el header
-    image_bytes = image.tobytes()
-    # Modifica los bytes de la imagen
-    modified_bytes = bytearray(image_bytes)
-    for i in range(len(modified_bytes)):
-        modified_bytes[i] = replace if modified_bytes[i] == find else modified_bytes[i]
-    # Crea una nueva imagen, esto agrega un header con los bytes modificados
-    glitched_image = PIL.Image.frombytes('RGB', image.size, bytes(modified_bytes))
-    # Guarda la imagen
-    glitched_image.save(output_path)
+from scripts.load_image import load_image
+from scripts.save_image import save_image
+from scripts.find_replace import find_replace
 
 if __name__ == "__main__":
     # Verifica que se proporcionen suficientes argumentos
@@ -33,5 +20,15 @@ if __name__ == "__main__":
     print(f"output_path: {output_path}")
     print(f"find: {find}")
     print(f"replace: {replace}")
+
+    # Carga la imagen
+    image = load_image(image_path)
+
+    # Encuentra y reemplaza los valores de los píxeles
+    replaced = find_replace(image, find, replace)
+
+    # Guarda la imagen en el archivo de salida especificado
+    save_image(replaced, output_path)
+
+    print(f"Imagen guardada como {output_path}")
     
-    find_and_replace(image_path, output_path, find, replace)
